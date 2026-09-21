@@ -1,10 +1,8 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { DEFAULT_INDUSTRY_TEMPLATES } from '../services/templateEngine';
 import { ensureUserExists } from '../utils/userHelper';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
 
 export async function getTemplates(req: AuthenticatedRequest, res: Response) {
   try {

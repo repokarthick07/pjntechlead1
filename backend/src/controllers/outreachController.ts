@@ -1,13 +1,13 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { renderMessageTemplate, findBestMatchingTemplate, buildWhatsAppUrl } from '../services/templateEngine';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
+import { ensureUserExists } from '../utils/userHelper';
 
 export async function getOutreachSession(req: AuthenticatedRequest, res: Response) {
   try {
     const userId = req.user?.id || 'default-user-id';
+    await ensureUserExists(userId);
     const { statusFilter = 'PENDING,WHATSAPP_OPENED,FOLLOW_UP' } = req.query;
 
     const statuses = String(statusFilter)

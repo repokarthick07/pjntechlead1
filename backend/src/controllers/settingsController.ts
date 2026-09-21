@@ -1,8 +1,7 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
+import { ensureUserExists } from '../utils/userHelper';
 
 export async function getSettings(req: AuthenticatedRequest, res: Response) {
   try {

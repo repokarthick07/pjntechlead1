@@ -1,9 +1,7 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { ensureUserExists } from '../utils/userHelper';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
 
 export async function getDashboardStats(req: AuthenticatedRequest, res: Response) {
   try {

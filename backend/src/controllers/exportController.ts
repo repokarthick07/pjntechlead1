@@ -1,11 +1,10 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { exportLeadsToCSV } from '../utils/csvExporter';
 import { exportLeadsToExcel } from '../utils/excelExporter';
 import { exportLeadsToPDFBuffer } from '../utils/pdfExporter';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
+import { ensureUserExists } from '../utils/userHelper';
 
 async function getFilteredLeadsForExport(userId: string, query: any) {
   const { search, category, status, leadIds } = query;

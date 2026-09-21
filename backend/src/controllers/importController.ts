@@ -1,11 +1,10 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { parseLeadFileBuffer } from '../parsers';
 import { normalizeAndValidatePhone } from '../services/phoneNormalizer';
 import { evaluateLeadsForPreview } from '../services/duplicateDetector';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
+import { ensureUserExists } from '../utils/userHelper';
 
 export async function uploadAndPreview(req: AuthenticatedRequest, res: Response) {
   try {

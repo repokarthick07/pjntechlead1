@@ -1,10 +1,8 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { normalizeAndValidatePhone } from '../services/phoneNormalizer';
 import { ensureUserExists } from '../utils/userHelper';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
 
 export async function getLeads(req: AuthenticatedRequest, res: Response) {
   try {

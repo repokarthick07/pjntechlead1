@@ -1,10 +1,9 @@
 import { Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
-
-const prisma = new PrismaClient();
+import prisma from '../utils/prisma';
+import { ensureUserExists } from '../utils/userHelper';
 const JWT_SECRET = process.env.JWT_SECRET || 'pjn-leadflow-super-secret-key-2026-production';
 
 export async function login(req: AuthenticatedRequest, res: Response) {
