@@ -1,12 +1,14 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
+import { ensureUserExists } from '../utils/userHelper';
 
 const prisma = new PrismaClient();
 
 export async function getDashboardStats(req: AuthenticatedRequest, res: Response) {
   try {
     const userId = req.user?.id || 'default-user-id';
+    await ensureUserExists(userId);
 
     const totalLeads = await prisma.lead.count({ where: { userId } });
     const pendingLeads = await prisma.lead.count({ where: { userId, status: 'PENDING' } });

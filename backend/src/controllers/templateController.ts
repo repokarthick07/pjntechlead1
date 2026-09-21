@@ -2,12 +2,14 @@ import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { DEFAULT_INDUSTRY_TEMPLATES } from '../services/templateEngine';
+import { ensureUserExists } from '../utils/userHelper';
 
 const prisma = new PrismaClient();
 
 export async function getTemplates(req: AuthenticatedRequest, res: Response) {
   try {
     const userId = req.user?.id || 'default-user-id';
+    await ensureUserExists(userId);
 
     let templates = await prisma.messageTemplate.findMany({
       where: { userId },

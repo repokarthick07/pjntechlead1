@@ -2,12 +2,14 @@ import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
 import { normalizeAndValidatePhone } from '../services/phoneNormalizer';
+import { ensureUserExists } from '../utils/userHelper';
 
 const prisma = new PrismaClient();
 
 export async function getLeads(req: AuthenticatedRequest, res: Response) {
   try {
     const userId = req.user?.id || 'default-user-id';
+    await ensureUserExists(userId);
     const {
       search,
       category,
