@@ -62,13 +62,22 @@ export const Templates: React.FC = () => {
       content: t.content,
       isDefault: t.isDefault
     });
-    setIsEditing(false);
+  };
+
+  const handleNewTemplate = () => {
+    setSelectedTemplate(null);
+    setFormData({
+      name: '',
+      category: 'General Business',
+      content: '',
+      isDefault: false
+    });
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (isEditing && selectedTemplate) {
+      if (selectedTemplate) {
         await templateService.updateTemplate(selectedTemplate.id, formData);
         showToast('Template updated successfully');
       } else {
@@ -121,11 +130,7 @@ export const Templates: React.FC = () => {
           </p>
         </div>
         <button
-          onClick={() => {
-            setSelectedTemplate(null);
-            setFormData({ name: '', category: 'General Business', content: '', isDefault: false });
-            setIsEditing(false);
-          }}
+          onClick={handleNewTemplate}
           className="px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-2xl shadow-md shadow-brand-600/30 flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />

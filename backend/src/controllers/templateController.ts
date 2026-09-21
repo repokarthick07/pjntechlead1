@@ -77,17 +77,18 @@ export async function createTemplate(req: AuthenticatedRequest, res: Response) {
 export async function updateTemplate(req: AuthenticatedRequest, res: Response) {
   try {
     const userId = req.user?.id || 'default-user-id';
+    await ensureUserExists(userId);
     const { id } = req.params;
     const { name, category, content, isDefault } = req.body;
 
-    const existing = await prisma.messageTemplate.findFirst({ where: { id, userId } });
+    const existing = await prisma.messageTemplate.findUnique({ where: { id } });
     if (!existing) {
       return res.status(404).json({ error: 'Template not found' });
     }
 
     if (isDefault) {
       await prisma.messageTemplate.updateMany({
-        where: { userId, id: { not: id } },
+        where: { userId: existing.userId, id: { not: id } },
         data: { isDefault: false }
       });
     }
@@ -111,9 +112,10 @@ export async function updateTemplate(req: AuthenticatedRequest, res: Response) {
 export async function deleteTemplate(req: AuthenticatedRequest, res: Response) {
   try {
     const userId = req.user?.id || 'default-user-id';
+    await ensureUserExists(userId);
     const { id } = req.params;
 
-    const existing = await prisma.messageTemplate.findFirst({ where: { id, userId } });
+    const existing = await prisma.messageTemplate.findUnique({ where: { id } });
     if (!existing) {
       return res.status(404).json({ error: 'Template not found' });
     }
