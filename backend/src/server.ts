@@ -28,8 +28,8 @@ app.use('/api', router);
 // Error Handler Middleware
 app.use(errorHandler);
 
-const server = app.listen(PORT, () => {
-  console.log(`🚀 PJN LEADFLOW Backend running on port http://localhost:${PORT}`);
+const server = app.listen(Number(PORT), '0.0.0.0', () => {
+  console.log(`🚀 PJN LEADFLOW Backend running on port http://0.0.0.0:${PORT}`);
 });
 
 server.on('error', (err: any) => {
