@@ -24,5 +24,5 @@ ENV NODE_ENV=production
 ENV PORT=5000
 EXPOSE 5000
 
-# Start the compiled backend
-CMD ["npm", "start"]
+# Start the compiled backend with automated DB sync & seed
+CMD ["sh", "-c", "npx prisma db push --skip-generate && npx ts-node prisma/seed.ts && npm start"]

@@ -30,19 +30,24 @@ async function main() {
 
   console.log(`✅ Default User: ${user.email}`);
 
-  // Seed default templates
-  for (const t of DEFAULT_INDUSTRY_TEMPLATES) {
-    await prisma.messageTemplate.create({
-      data: {
-        userId: user.id,
-        name: t.name,
-        category: t.category,
-        content: t.content,
-        isDefault: t.category === 'General Business'
-      }
-    });
+  // Seed default templates if not already present
+  const existingTemplates = await prisma.messageTemplate.count({ where: { userId: user.id } });
+  if (existingTemplates === 0) {
+    for (const t of DEFAULT_INDUSTRY_TEMPLATES) {
+      await prisma.messageTemplate.create({
+        data: {
+          userId: user.id,
+          name: t.name,
+          category: t.category,
+          content: t.content,
+          isDefault: t.category === 'General Business'
+        }
+      });
+    }
+    console.log(`✅ Seeded ${DEFAULT_INDUSTRY_TEMPLATES.length} message templates.`);
+  } else {
+    console.log(`ℹ️ Message templates already exist (${existingTemplates}). Skipping template seed.`);
   }
-  console.log(`✅ Seeded ${DEFAULT_INDUSTRY_TEMPLATES.length} message templates.`);
 
   // Seed initial realistic leads for testing
   const sampleLeads = [
@@ -108,17 +113,22 @@ async function main() {
     }
   ];
 
-  for (const lead of sampleLeads) {
-    await prisma.lead.create({
-      data: {
-        userId: user.id,
-        ...lead
-      }
-    });
+  const existingLeads = await prisma.lead.count({ where: { userId: user.id } });
+  if (existingLeads === 0) {
+    for (const lead of sampleLeads) {
+      await prisma.lead.create({
+        data: {
+          userId: user.id,
+          ...lead
+        }
+      });
+    }
+    console.log(`✅ Seeded ${sampleLeads.length} sample leads.`);
+  } else {
+    console.log(`ℹ️ Leads already exist (${existingLeads}). Skipping sample leads seed.`);
   }
 
-  console.log(`✅ Seeded ${sampleLeads.length} sample leads.`);
-  console.log('🎉 Seeding complete!');
+  console.log('🎉 Database preparation complete!');
 }
 
 main()
