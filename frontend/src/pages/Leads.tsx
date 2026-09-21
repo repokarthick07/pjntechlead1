@@ -63,11 +63,16 @@ export const Leads: React.FC = () => {
         page,
         limit: 24
       });
-      setLeads(res.leads);
-      setTotalPages(res.pagination.totalPages);
-      setTotalLeads(res.pagination.total);
-      setFilterOptions(res.filterOptions);
+      setLeads(Array.isArray(res?.leads) ? res.leads : []);
+      setTotalPages(res?.pagination?.totalPages || 1);
+      setTotalLeads(res?.pagination?.total || 0);
+      setFilterOptions({
+        categories: Array.isArray(res?.filterOptions?.categories) ? res.filterOptions.categories : [],
+        cities: Array.isArray(res?.filterOptions?.cities) ? res.filterOptions.cities : []
+      });
     } catch (err) {
+      setLeads([]);
+      setFilterOptions({ categories: [], cities: [] });
       showToast('Failed to load lead database', 'error');
     } finally {
       setLoading(false);
@@ -160,7 +165,7 @@ export const Leads: React.FC = () => {
             className="px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-700"
           >
             <option value="ALL">All Categories</option>
-            {filterOptions.categories.map((c) => (
+            {(filterOptions?.categories || []).map((c) => (
               <option key={c.name} value={c.name}>
                 {c.name} ({c.count})
               </option>
@@ -255,7 +260,7 @@ export const Leads: React.FC = () => {
         </div>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {leads.map((lead) => (
+          {(leads || []).map((lead) => (
             <LeadCard
               key={lead.id}
               lead={lead}

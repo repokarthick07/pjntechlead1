@@ -31,17 +31,19 @@ export const Templates: React.FC = () => {
     try {
       setLoading(true);
       const res = await templateService.getTemplates();
-      setTemplates(res);
-      if (res.length > 0 && !selectedTemplate) {
-        setSelectedTemplate(res[0]);
+      const list = Array.isArray(res) ? res : [];
+      setTemplates(list);
+      if (list.length > 0 && !selectedTemplate) {
+        setSelectedTemplate(list[0]);
         setFormData({
-          name: res[0].name,
-          category: res[0].category,
-          content: res[0].content,
-          isDefault: res[0].isDefault
+          name: list[0].name,
+          category: list[0].category,
+          content: list[0].content,
+          isDefault: list[0].isDefault
         });
       }
     } catch (err) {
+      setTemplates([]);
       showToast('Failed to load message templates', 'error');
     } finally {
       setLoading(false);

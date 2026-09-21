@@ -34,7 +34,8 @@ export const LeadTable: React.FC<LeadTableProps> = ({
   onDeleteLead,
   onScheduleFollowUp
 }) => {
-  const isAllSelected = leads.length > 0 && selectedIds.length === leads.length;
+  const safeLeads = Array.isArray(leads) ? leads : [];
+  const isAllSelected = safeLeads.length > 0 && selectedIds.length === safeLeads.length;
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
@@ -61,14 +62,14 @@ export const LeadTable: React.FC<LeadTableProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
-            {leads.length === 0 ? (
+            {safeLeads.length === 0 ? (
               <tr>
                 <td colSpan={9} className="py-12 text-center text-slate-400">
                   No lead records found.
                 </td>
               </tr>
             ) : (
-              leads.map((lead, idx) => {
+              safeLeads.map((lead, idx) => {
                 const isSelected = selectedIds.includes(lead.id);
                 return (
                   <tr

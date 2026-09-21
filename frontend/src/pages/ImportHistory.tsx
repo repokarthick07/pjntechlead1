@@ -12,8 +12,11 @@ export const ImportHistory: React.FC = () => {
   useEffect(() => {
     importService
       .getHistory()
-      .then((res) => setJobs(res))
-      .catch(() => showToast('Failed to load import history', 'error'))
+      .then((res) => setJobs(Array.isArray(res) ? res : []))
+      .catch(() => {
+        setJobs([]);
+        showToast('Failed to load import history', 'error');
+      })
       .finally(() => setLoading(false));
   }, []);
 

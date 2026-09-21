@@ -13,8 +13,9 @@ export const FollowUps: React.FC = () => {
     try {
       setLoading(true);
       const res = await followUpService.getTodayFollowUps();
-      setFollowUps(res);
+      setFollowUps(Array.isArray(res) ? res : []);
     } catch (err) {
+      setFollowUps([]);
       showToast('Failed to load follow-ups', 'error');
     } finally {
       setLoading(false);
