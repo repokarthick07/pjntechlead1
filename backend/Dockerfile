@@ -19,10 +19,8 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-# Set environment and expose port
+# Set environment
 ENV NODE_ENV=production
-ENV PORT=5000
-EXPOSE 5000
 
 # Start the compiled backend
 CMD ["npm", "start"]
